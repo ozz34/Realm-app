@@ -42,12 +42,16 @@ class TaskListViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         let taskList = taskLists[indexPath.row]
         content.text = taskList.name
-        content.secondaryText = "\(taskList.tasks.count)"
+        // получился лишний функционал, но через moveRowAt не получилось
+        if taskList.tasks.filter("isComplete = true").count == taskList.tasks.count {
+            content.secondaryText = "✅"
+        } else {
+            content.secondaryText = "\(taskList.tasks.filter("isComplete = false").count)"
+        }
         cell.contentConfiguration = content
         return cell
     }
     
-    // MARK: - Table View Data Source
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let taskList = taskLists[indexPath.row]
         
@@ -83,7 +87,17 @@ class TaskListViewController: UITableViewController {
         tasksVC.taskList = taskList
     }
 
+    //MARK: SegmentedControl
     @IBAction func sortingList(_ sender: UISegmentedControl) {
+        // Идея была передать в исходный массив списков задач полученный отсортированный, но не пойму как
+        /* let segmentIndex = sender.selectedSegmentIndex
+        if segmentIndex == 0 {
+           taskLists.sorted(by: {$0.date > $1.date})
+        } else {
+            taskLists.sorted(by: {$0.name > $1.name})
+        }
+        tableView.reloadData()
+         */
     }
     
     @objc private func addButtonPressed() {

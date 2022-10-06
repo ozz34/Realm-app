@@ -53,6 +53,40 @@ class TasksViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let task = indexPath.section == 0 ? currentTasks[indexPath.row] : completedTasks[indexPath.row]
+
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, _ in
+            StorageManager.shared.delete(task)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { [unowned self] _, _, isDone in
+            showAlert(with: task) {
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+            isDone(true)
+        }
+        
+        let undoneAction = UIContextualAction(style: .normal, title: "Undone") { _, _, isDone in
+            StorageManager.shared.undone(task)
+            tableView.reloadData()
+            isDone(true)
+        }
+
+        let doneAction = UIContextualAction(style: .normal, title: "Done") { _, _, isDone in
+            StorageManager.shared.done(task)
+            tableView.reloadData()
+            isDone(true)
+        }
+
+        editAction.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+        doneAction.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+        undoneAction.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+
+        return UISwipeActionsConfiguration(actions: [doneAction, editAction, deleteAction, undoneAction])
+    }
+    
     @objc private func addButtonPressed() {
         showAlert()
     }
@@ -65,11 +99,12 @@ extension TasksViewController {
         
         let alert = UIAlertController.createAlert(withTitle: title, andMessage: "What do you want to do?")
         
-        alert.action(with: task) { [weak self] taskTitle, note in
-            if let _ = task, let _ = completion {
-                // TODO - edit task
+        alert.action(with: task) { [weak self] newTask, note in
+            if let task = task, let completion = completion {
+                StorageManager.shared.edit(task, newValue: newTask, note: note)
+                    completion()
             } else {
-                self?.save(task: taskTitle, withNote: note)
+                self?.save(task: newTask, withNote: note)
             }
         }
         
