@@ -1,10 +1,7 @@
 //
 //  TaskListsViewController.swift
 //  RealmApp
-//
-//  Created by Alexey Efimov on 02.07.2018.
-//  Copyright © 2018 Alexey Efimov. All rights reserved.
-//
+
 
 import UIKit
 import RealmSwift
@@ -42,15 +39,19 @@ class TaskListViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         let taskList = taskLists[indexPath.row]
         content.text = taskList.name
-        // получился лишний функционал, но через moveRowAt не получилось
+    
         if taskList.tasks.filter("isComplete = true").count == taskList.tasks.count {
-            content.secondaryText = "✅"
+            
+            content.secondaryText = ""
+            cell.accessoryType = .checkmark
         } else {
             content.secondaryText = "\(taskList.tasks.filter("isComplete = false").count)"
         }
         cell.contentConfiguration = content
         return cell
     }
+    
+
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let taskList = taskLists[indexPath.row]
@@ -89,15 +90,13 @@ class TaskListViewController: UITableViewController {
 
     //MARK: SegmentedControl
     @IBAction func sortingList(_ sender: UISegmentedControl) {
-        // Идея была передать в исходный массив списков задач полученный отсортированный, но не пойму как
-        /* let segmentIndex = sender.selectedSegmentIndex
+        let segmentIndex = sender.selectedSegmentIndex
         if segmentIndex == 0 {
-           taskLists.sorted(by: {$0.date > $1.date})
+            taskLists = taskLists.sorted(byKeyPath: "date")
         } else {
-            taskLists.sorted(by: {$0.name > $1.name})
+            taskLists = taskLists.sorted(byKeyPath: "name")
         }
-        tableView.reloadData()
-         */
+        tableView.reloadData()  
     }
     
     @objc private func addButtonPressed() {
