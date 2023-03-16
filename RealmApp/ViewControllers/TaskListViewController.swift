@@ -6,10 +6,11 @@
 import UIKit
 import RealmSwift
 
-class TaskListViewController: UITableViewController {
-
+final class TaskListViewController: UITableViewController {
+    // MARK: - Properties
     var taskLists: Results<TaskList>!
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         let addButton = UIBarButtonItem(
@@ -51,8 +52,6 @@ class TaskListViewController: UITableViewController {
         return cell
     }
     
-
-    
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let taskList = taskLists[indexPath.row]
         
@@ -88,7 +87,7 @@ class TaskListViewController: UITableViewController {
         tasksVC.taskList = taskList
     }
 
-    //MARK: SegmentedControl
+    // MARK: SegmentedControl
     @IBAction func sortingList(_ sender: UISegmentedControl) {
         let segmentIndex = sender.selectedSegmentIndex
         if segmentIndex == 0 {
@@ -99,17 +98,19 @@ class TaskListViewController: UITableViewController {
         tableView.reloadData()  
     }
     
+    // MARK: - Actions
     @objc private func addButtonPressed() {
         showAlert()
     }
     
+    // MARK: - Helpers
     private func createTempData() {
         DataManager.shared.createTempData { [unowned self] in
             tableView.reloadData()
         }
     }
 }
-
+// MARK: - TaskListViewController
 extension TaskListViewController {
     
     private func showAlert(with taskList: TaskList? = nil, completion: (() -> Void)? = nil) {

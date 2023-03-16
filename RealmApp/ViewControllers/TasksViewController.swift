@@ -5,13 +5,14 @@
 import UIKit
 import RealmSwift
 
-class TasksViewController: UITableViewController {
-    
+final class TasksViewController: UITableViewController {
+    // MARK: - Properties
     var taskList: TaskList!
     
     private var currentTasks: Results<Task>!
     private var completedTasks: Results<Task>!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = taskList.name
@@ -83,12 +84,13 @@ class TasksViewController: UITableViewController {
         return UISwipeActionsConfiguration(actions: [doneAction, editAction, deleteAction, undoneAction])
     }
     
+    // MARK: - Actions
     @objc private func addButtonPressed() {
         showAlert()
     }
-
 }
 
+// MARK: - show alert
 extension TasksViewController {
     private func showAlert(with task: Task? = nil, completion: (() -> Void)? = nil) {
         let title = task != nil ? "Edit Task" : "New Task"

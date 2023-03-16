@@ -5,13 +5,11 @@
 import UIKit
 
 extension UIAlertController {
-    
     static func createAlert(withTitle title: String, andMessage message: String) -> UIAlertController {
         UIAlertController(title: title, message: message, preferredStyle: .alert)
     }
         
     func action(with taskList: TaskList?, completion: @escaping (String) -> Void) {
-        
         let doneButton = taskList == nil ? "Save" : "Update"
                 
         let saveAction = UIAlertAction(title: doneButton, style: .default) { _ in
@@ -31,7 +29,6 @@ extension UIAlertController {
     }
     
     func action(with task: Task?, completion: @escaping (String, String) -> Void) {
-                        
         let title = task == nil ? "Save" : "Update"
         
         let saveAction = UIAlertAction(title: title, style: .default) { _ in

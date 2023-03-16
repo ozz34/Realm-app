@@ -3,7 +3,6 @@
 //  RealmApp
 //
 
-
 import Foundation
 import RealmSwift
 

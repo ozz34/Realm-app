@@ -5,7 +5,7 @@
 
 import Foundation
 
-class DataManager {
+final class DataManager {
     static let shared = DataManager()
     
     private init() {}
